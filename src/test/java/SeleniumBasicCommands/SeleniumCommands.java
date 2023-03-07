@@ -438,6 +438,12 @@ public class SeleniumCommands {
 		System.out.println(elements);
 		submitButton.submit();
 	}
+	@Test
+	public void TC_019_verifyTheMessageDisplayedInNewTab()
+	{
+		driver.get("https://demoqa.com/browser-windows");
+	}
+	
 	
 }
 
