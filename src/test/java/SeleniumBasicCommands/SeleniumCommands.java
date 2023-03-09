@@ -1,6 +1,8 @@
 package SeleniumBasicCommands;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -442,8 +444,49 @@ public class SeleniumCommands {
 	public void TC_019_verifyTheMessageDisplayedInNewTab()
 	{
 		driver.get("https://demoqa.com/browser-windows");
+		WebElement newTabButton=driver.findElement(By.xpath("//button[@id='tabButton']"));
+		boolean newTabbuttonStatus=newTabButton.isEnabled();
+		Assert.assertTrue(newTabbuttonStatus, "button is not enabled");
+		newTabButton.click();
+		driver.navigate().to("https://demoqa.com/sample");
+		WebElement samplePage=driver.findElement(By.xpath("//h1[@id='sampleHeading']")); //child window
+		String actualMessage=samplePage.getText();
+		String expectedMessage="This is a sample page";
+		Assert.assertEquals(actualMessage, expectedMessage,"Invalid Message Found");
+		
 	}
 	
+	@Test
+	public void TC_020_verifyTheMessageDisplayedInNewWindow()
+	{
+		driver.get("https://demoqa.com/browser-windows");
+		String parentWindow=driver.getWindowHandle();
+		System.out.println("Parent Window ID=" +parentWindow);
+		WebElement newWindowButton=driver.findElement(By.id("windowButton")); 
+		newWindowButton.click();
+		Set<String> handles=driver.getWindowHandles(); //all windows
+		System.out.println("Windows ID=" +handles);
+		Iterator<String> handleIds=handles.iterator();
+		while(handleIds.hasNext())
+		{
+			String childWindow=handleIds.next();
+			if(!childWindow.equals(parentWindow))
+			{
+				driver.switchTo().window(childWindow);
+				WebElement sampleHeading=driver.findElement(By.id("sampleHeading"));
+				String actualText=sampleHeading.getText();
+				String expectedText="This is a sample page";
+				Assert.assertEquals(actualText,expectedText,"Invalid heading Found");
+				driver.close();
+				}
+			}
+		driver.switchTo().window(parentWindow);
+	}
+		
+	}
 	
-}
+
+	
+	
+
 
