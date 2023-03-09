@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -47,7 +48,7 @@ public class SeleniumCommands {
 	@AfterMethod
 	public void tearDown() {
 		// driver.close();
-		 driver.quit();
+		driver.quit();
 	}
 
 	@Test
@@ -419,74 +420,115 @@ public class SeleniumCommands {
 		System.out.println(" status--------" + singleCheckBoxDemo);
 		Assert.assertTrue(statusAfterClick, "Checkbox is not selected");
 	}
+
 	@Test
-	public void TC_018_verifyIsEnabled() 
-	{
+	public void TC_018_verifyIsEnabled() {
 		driver.get("https://selenium.obsqurazone.com/ajax-form-submit.php");
-		WebElement submitButton=driver.findElement(By.xpath("//input[@value='Submit']"));
-		//submitButton.click();
+		WebElement submitButton = driver.findElement(By.xpath("//input[@value='Submit']"));
+		// submitButton.click();
 		boolean submitButtonClick = submitButton.isEnabled();
-		System.out.println(" status-----" +submitButtonClick);
+		System.out.println(" status-----" + submitButtonClick);
 		Assert.assertTrue(submitButtonClick, "submit button not  displayed");
-		Point point=submitButton.getLocation();  //to get location of an element
-		System.out.println(point.x + ","+ point.y);
-		Dimension dim=submitButton.getSize();
+		Point point = submitButton.getLocation(); // to get location of an element
+		System.out.println(point.x + "," + point.y);
+		Dimension dim = submitButton.getSize();
 		System.out.println(dim.height + "," + dim.width);
-		String backGroundColor=submitButton.getCssValue("background-color");
+		String backGroundColor = submitButton.getCssValue("background-color");
 		System.out.println(backGroundColor);
-		WebElement inputElement=driver.findElement(By.tagName("input")); //only one value
+		WebElement inputElement = driver.findElement(By.tagName("input")); // only one value
 		System.out.println(inputElement);
-		List<WebElement> elements=driver.findElements(By.tagName("input"));// all input elements
+		List<WebElement> elements = driver.findElements(By.tagName("input"));// all input elements
 		System.out.println(elements);
 		submitButton.submit();
 	}
+
 	@Test
-	public void TC_019_verifyTheMessageDisplayedInNewTab()
-	{
+	public void TC_019_verifyTheMessageDisplayedInNewTab() {
 		driver.get("https://demoqa.com/browser-windows");
-		WebElement newTabButton=driver.findElement(By.xpath("//button[@id='tabButton']"));
-		boolean newTabbuttonStatus=newTabButton.isEnabled();
+		WebElement newTabButton = driver.findElement(By.xpath("//button[@id='tabButton']"));
+		boolean newTabbuttonStatus = newTabButton.isEnabled();
 		Assert.assertTrue(newTabbuttonStatus, "button is not enabled");
 		newTabButton.click();
 		driver.navigate().to("https://demoqa.com/sample");
-		WebElement samplePage=driver.findElement(By.xpath("//h1[@id='sampleHeading']")); //child window
-		String actualMessage=samplePage.getText();
-		String expectedMessage="This is a sample page";
-		Assert.assertEquals(actualMessage, expectedMessage,"Invalid Message Found");
-		
+		WebElement samplePage = driver.findElement(By.xpath("//h1[@id='sampleHeading']")); // child window
+		String actualMessage = samplePage.getText();
+		String expectedMessage = "This is a sample page";
+		Assert.assertEquals(actualMessage, expectedMessage, "Invalid Message Found");
+
 	}
-	
+
 	@Test
-	public void TC_020_verifyTheMessageDisplayedInNewWindow()
-	{
+	public void TC_020_verifyTheMessageDisplayedInNewWindow() {
 		driver.get("https://demoqa.com/browser-windows");
-		String parentWindow=driver.getWindowHandle();
-		System.out.println("Parent Window ID=" +parentWindow);
-		WebElement newWindowButton=driver.findElement(By.id("windowButton")); 
+		String parentWindow = driver.getWindowHandle();
+		System.out.println("Parent Window ID=" + parentWindow);
+		WebElement newWindowButton = driver.findElement(By.id("windowButton"));
 		newWindowButton.click();
-		Set<String> handles=driver.getWindowHandles(); //all windows
-		System.out.println("Windows ID=" +handles);
-		Iterator<String> handleIds=handles.iterator();
-		while(handleIds.hasNext())
-		{
-			String childWindow=handleIds.next();
-			if(!childWindow.equals(parentWindow))
-			{
+		Set<String> handles = driver.getWindowHandles(); // all windows
+		System.out.println("Windows ID=" + handles);
+		Iterator<String> handleIds = handles.iterator();
+		while (handleIds.hasNext()) {
+			String childWindow = handleIds.next();
+			if (!childWindow.equals(parentWindow)) {
 				driver.switchTo().window(childWindow);
-				WebElement sampleHeading=driver.findElement(By.id("sampleHeading"));
-				String actualText=sampleHeading.getText();
-				String expectedText="This is a sample page";
-				Assert.assertEquals(actualText,expectedText,"Invalid heading Found");
+				WebElement sampleHeading = driver.findElement(By.id("sampleHeading"));
+				String actualText = sampleHeading.getText();
+				String expectedText = "This is a sample page";
+				Assert.assertEquals(actualText, expectedText, "Invalid heading Found");
 				driver.close();
-				}
 			}
+		}
 		driver.switchTo().window(parentWindow);
 	}
-		
+
+	@Test
+	public void TC_21_verifySimpleAlert() {
+		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
+		WebElement clickButton = driver.findElement(By.xpath("//button[@ class='btn btn-success']"));
+		clickButton.click();
+		Alert alert = driver.switchTo().alert();
+		String alertText = alert.getText();
+		System.out.println(alertText);
+		alert.accept();
 	}
-	
 
-	
-	
+	@Test
+	public void TC_023_verifyConfirmAlert() {
+		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
+		WebElement clickMeButton = driver.findElement(By.xpath("//button[@ class='btn btn-warning']"));
+		clickMeButton.click();
+		Alert alert = driver.switchTo().alert();
+		String alertText = alert.getText();
+		System.out.println(alertText);
+		alert.dismiss();
+	}
 
+	@Test
+	public void TC_24_verifyPromptAlert() {
+		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
+		WebElement promptButton = driver.findElement(By.xpath("//button[@class='btn btn-danger']"));
+		promptButton.click();
+		Alert alert = driver.switchTo().alert();
+		String alertText = alert.getText();
+		System.out.println(alertText);
+		alert.sendKeys("Testing");
+		alert.accept();
+	}
 
+	@Test
+	public void TC_25_verifyTextInAFrame() {
+		driver.get("https://demoqa.com/frames");
+		List<WebElement> frames = driver.findElements(By.tagName("iframe"));
+		int noOfFrames = frames.size();
+		System.out.println(noOfFrames);
+		// driver.switchTo().frame(3); //using index
+		driver.switchTo().frame("frame1"); // using name-copy id from inspect tag
+		//WebElement frame = driver.findElement(By.id("frame1")); // using webelememt
+		//driver.switchTo().frame(frame);
+		WebElement heading = driver.findElement(By.id("sampleHeading"));
+		String headingtext = heading.getText();
+		System.out.println(headingtext);
+		 driver.switchTo().parentFrame();
+		//driver.switchTo().defaultContent();
+	}
+}

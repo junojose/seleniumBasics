@@ -7,7 +7,7 @@
         <methods>
           <include name="setUp"/>
           <include name="tearDown"/>
-          <include name="TC_018_verifyIsEnabled"/>
+          <include name="TC_020_verifyTheMessageDisplayedInNewWindow"/>
         </methods>
       </class> <!-- SeleniumBasicCommands.SeleniumCommands -->
     </classes>
