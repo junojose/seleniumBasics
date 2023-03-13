@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -42,7 +43,7 @@ public class SeleniumCommands {
 
 	@BeforeMethod
 	public void setUp() {
-		testInitialise("chrome");
+		testInitialise("firefox");
 	}
 
 	@AfterMethod
@@ -482,7 +483,39 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_21_verifySimpleAlert() {
+	public void TC_022_verifyMultipleWindowHandling() {
+		driver.get("http://www.webdriveruniversity.com/");
+		WebElement contactUs = driver.findElement(By.xpath("//h1[text()='CONTACT US']"));
+		contactUs.click();
+		WebElement loginPortal = driver.findElement(By.xpath("//h1[text()='LOGIN PORTAL']"));
+		loginPortal.click();
+		String parent = driver.getWindowHandle(); // parent tab or window
+		System.out.println("parent:" + parent);
+		String title = "";
+		Set<String> allWindows = driver.getWindowHandles(); // all windows
+		for (String temp : allWindows) {
+			if (!temp.equals(parent)) {
+				System.out.println("Child Windows:" + temp);
+				driver.switchTo().window(temp);
+				title = driver.getTitle();
+				System.out.println(driver.getCurrentUrl());
+				System.out.println("---------------------");
+			}
+			if (title.equals("WebDriver | Login Portal")) {
+				WebElement uname = driver.findElement(By.id("text"));
+				uname.sendKeys("UserName");
+			}
+
+			if (title.equals("WebDriver | Contact Us")) {
+				WebElement firstName = driver.findElement(By.name("first_name"));
+				firstName.sendKeys("Juno");
+			}
+		}
+
+	}
+
+	@Test
+	public void TC_23_verifySimpleAlert() {
 		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
 		WebElement clickButton = driver.findElement(By.xpath("//button[@ class='btn btn-success']"));
 		clickButton.click();
@@ -493,7 +526,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_023_verifyConfirmAlert() {
+	public void TC_024_verifyConfirmAlert() {
 		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
 		WebElement clickMeButton = driver.findElement(By.xpath("//button[@ class='btn btn-warning']"));
 		clickMeButton.click();
@@ -504,7 +537,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_24_verifyPromptAlert() {
+	public void TC_25_verifyPromptAlert() {
 		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
 		WebElement promptButton = driver.findElement(By.xpath("//button[@class='btn btn-danger']"));
 		promptButton.click();
@@ -516,19 +549,82 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_25_verifyTextInAFrame() {
+	public void TC_26_verifyTextInAFrame() {
 		driver.get("https://demoqa.com/frames");
 		List<WebElement> frames = driver.findElements(By.tagName("iframe"));
 		int noOfFrames = frames.size();
 		System.out.println(noOfFrames);
 		// driver.switchTo().frame(3); //using index
 		driver.switchTo().frame("frame1"); // using name-copy id from inspect tag
-		//WebElement frame = driver.findElement(By.id("frame1")); // using webelememt
-		//driver.switchTo().frame(frame);
+		// WebElement frame = driver.findElement(By.id("frame1")); // using webelememt
+		// driver.switchTo().frame(frame);
 		WebElement heading = driver.findElement(By.id("sampleHeading"));
 		String headingtext = heading.getText();
 		System.out.println(headingtext);
-		 driver.switchTo().parentFrame();
-		//driver.switchTo().defaultContent();
+		driver.switchTo().parentFrame();
+		// driver.switchTo().defaultContent();
+	}
+	@Test
+	public void TC_27_verifyRightClick()
+	{
+	  driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+	  WebElement rightClickButton=driver.findElement(By.xpath("//span[@class='context-menu-one btn btn-neutral']"));
+	  Actions action=new Actions(driver);
+	  action.contextClick(rightClickButton).build().perform();
+	  //action.build().perform();
+	}
+	@Test
+	public void TC_28_verifyDoubleClick()
+	{
+	  driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+	  WebElement doubleClickButton=driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
+	  Actions action=new Actions(driver);
+	  action.doubleClick(doubleClickButton).build().perform();
+      Alert alert=driver.switchTo().alert();
+      alert.accept();
+	}
+	@Test
+	public void TC_29_verifyMouseOver()
+	{
+	  driver.get("https://demoqa.com/menu/");
+	  WebElement mainItemOne=driver.findElement(By.xpath("//a[text()='Main Item 1']"));
+	  Actions action=new Actions(driver);
+	  action.moveToElement(mainItemOne).build().perform();
+	  //action.moveToElement(mainItemOne ,50,50).build().perform();
+	  //action.moveByOffset(40, 50).build().perform();
+	  
+	}
+	@Test
+	public void TC_30_verifyDragAndDrop()
+	{
+		driver.get("https://demoqa.com/droppable");
+		 WebElement dragMeButton=driver.findElement(By.id("draggable"));
+		 WebElement dropMeButton=driver.findElement(By.id("droppable"));
+		 Actions action=new Actions(driver);
+		  action.dragAndDrop(dragMeButton,dropMeButton).build().perform();
+	}
+	@Test
+	public void TC_31_verifyDragAndDropOffset()
+	{
+		driver.get("https://demoqa.com/dragabble");
+		WebElement dragMeBox=driver.findElement(By.xpath("//div[@id='dragBox']"));
+		Actions action=new Actions(driver);
+		action.dragAndDropBy(dragMeBox,100,100).build().perform();
+		
+	}
+	@Test
+	public void TC_32_verifyDragAndDropAssignment()
+	{
+	driver.get("https://selenium.obsqurazone.com/drag-drop.php");
+	WebElement draggableOne=driver.findElement(By.xpath("//span[text()='Draggable n°1']"));
+	WebElement draggableTwo=driver.findElement(By.xpath("//span[text()='Draggable n°2']"));
+	WebElement draggableThree=driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
+	WebElement draggableFour=driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
+	WebElement droppBox=driver.findElement(By.xpath("//div[@id='mydropzone']"));
+	Actions action=new Actions(driver);
+	action.dragAndDrop(draggableOne, droppBox).build().perform();
+	action.dragAndDrop(draggableTwo, droppBox).build().perform();
+	action.dragAndDrop(draggableThree, droppBox).build().perform();
+	action.dragAndDrop(draggableFour, droppBox).build().perform();
 	}
 }
