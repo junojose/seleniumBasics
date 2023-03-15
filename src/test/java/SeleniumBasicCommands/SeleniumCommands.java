@@ -1,5 +1,6 @@
 package SeleniumBasicCommands;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -49,7 +51,7 @@ public class SeleniumCommands {
 	@AfterMethod
 	public void tearDown() {
 		// driver.close();
-		driver.quit();
+		//driver.quit();
 	}
 
 	@Test
@@ -619,7 +621,7 @@ public class SeleniumCommands {
 	WebElement draggableOne=driver.findElement(By.xpath("//span[text()='Draggable n°1']"));
 	WebElement draggableTwo=driver.findElement(By.xpath("//span[text()='Draggable n°2']"));
 	WebElement draggableThree=driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
-	WebElement draggableFour=driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
+	WebElement draggableFour=driver.findElement(By.xpath("//span[text()='Draggable n°4']"));
 	WebElement droppBox=driver.findElement(By.xpath("//div[@id='mydropzone']"));
 	Actions action=new Actions(driver);
 	action.dragAndDrop(draggableOne, droppBox).build().perform();
@@ -627,4 +629,39 @@ public class SeleniumCommands {
 	action.dragAndDrop(draggableThree, droppBox).build().perform();
 	action.dragAndDrop(draggableFour, droppBox).build().perform();
 	}
+	@Test
+	public void TC_33_verifyclickHoldAndResize()
+	{
+		driver.get("https://demoqa.com/resizable");
+		WebElement dragResizeBox=driver.findElement(By.xpath("//div[@id='resizableBoxWithRestriction']/child::span"));
+		Actions action=new Actions(driver);
+		action.clickAndHold(dragResizeBox).build().perform();
+		action.dragAndDropBy(dragResizeBox,75,75).build().perform();
+	}
+	@Test
+	public void TC_34_verifyValuesInDropDown()
+	{
+		driver.get("https://demo.guru99.com/test/newtours/register.php");
+		WebElement countryDropMenu=driver.findElement(By.xpath("//select[@name='country']"));
+		List<String> expDropDownList=new ArrayList<String>();
+		expDropDownList.add("ALBANIA");
+		expDropDownList.add("ALGERIA");
+		expDropDownList.add("AMERICAN SAMOA");
+		expDropDownList.add("ANDORRA");
+		List<String> actDropDownList=new ArrayList<String>();
+		Select select= new Select(countryDropMenu);
+		List<WebElement> dropDownOptions=select.getOptions();
+		for(int i=0;i<4;i++)
+		{
+			actDropDownList.add(dropDownOptions.get(i).getText());
+			
+		}
+		System.out.println(actDropDownList);
+		Assert.assertEquals(actDropDownList, expDropDownList,"Invalid dropDown option");
+		//select.selectByVisibleText("INDIA");
+		 select.selectByIndex(23);
+		//select.selectByValue("ICELAND");
+		
+	}
+	
 }
