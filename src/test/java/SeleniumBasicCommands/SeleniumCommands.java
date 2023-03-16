@@ -12,6 +12,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -27,7 +28,9 @@ public class SeleniumCommands {
 
 	public void testInitialise(String browser) {
 		if (browser.equals("chrome")) {
-			driver = new ChromeDriver();
+			ChromeOptions ops=new ChromeOptions();
+			ops.addArguments("--remote-allow-origins=*");
+			driver = new ChromeDriver(ops);
 		} else if (browser.equals("firefox")) {
 			driver = new FirefoxDriver();
 		} else if (browser.equals("edge")) {
@@ -45,13 +48,13 @@ public class SeleniumCommands {
 
 	@BeforeMethod
 	public void setUp() {
-		testInitialise("firefox");
+		testInitialise("chrome");
 	}
 
 	@AfterMethod
 	public void tearDown() {
 		// driver.close();
-		//driver.quit();
+		// driver.quit();
 	}
 
 	@Test
@@ -566,102 +569,155 @@ public class SeleniumCommands {
 		driver.switchTo().parentFrame();
 		// driver.switchTo().defaultContent();
 	}
+
 	@Test
-	public void TC_27_verifyRightClick()
-	{
-	  driver.get("https://demo.guru99.com/test/simple_context_menu.html");
-	  WebElement rightClickButton=driver.findElement(By.xpath("//span[@class='context-menu-one btn btn-neutral']"));
-	  Actions action=new Actions(driver);
-	  action.contextClick(rightClickButton).build().perform();
-	  //action.build().perform();
+	public void TC_27_verifyRightClick() {
+		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+		WebElement rightClickButton = driver.findElement(By.xpath("//span[@class='context-menu-one btn btn-neutral']"));
+		Actions action = new Actions(driver);
+		action.contextClick(rightClickButton).build().perform();
+		// action.build().perform();
 	}
+
 	@Test
-	public void TC_28_verifyDoubleClick()
-	{
-	  driver.get("https://demo.guru99.com/test/simple_context_menu.html");
-	  WebElement doubleClickButton=driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
-	  Actions action=new Actions(driver);
-	  action.doubleClick(doubleClickButton).build().perform();
-      Alert alert=driver.switchTo().alert();
-      alert.accept();
+	public void TC_28_verifyDoubleClick() {
+		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
+		WebElement doubleClickButton = driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
+		Actions action = new Actions(driver);
+		action.doubleClick(doubleClickButton).build().perform();
+		Alert alert = driver.switchTo().alert();
+		alert.accept();
 	}
+
 	@Test
-	public void TC_29_verifyMouseOver()
-	{
-	  driver.get("https://demoqa.com/menu/");
-	  WebElement mainItemOne=driver.findElement(By.xpath("//a[text()='Main Item 1']"));
-	  Actions action=new Actions(driver);
-	  action.moveToElement(mainItemOne).build().perform();
-	  //action.moveToElement(mainItemOne ,50,50).build().perform();
-	  //action.moveByOffset(40, 50).build().perform();
-	  
+	public void TC_29_verifyMouseOver() {
+		driver.get("https://demoqa.com/menu/");
+		WebElement mainItemOne = driver.findElement(By.xpath("//a[text()='Main Item 1']"));
+		Actions action = new Actions(driver);
+		action.moveToElement(mainItemOne).build().perform();
+		// action.moveToElement(mainItemOne ,50,50).build().perform();
+		// action.moveByOffset(40, 50).build().perform();
+
 	}
+
 	@Test
-	public void TC_30_verifyDragAndDrop()
-	{
+	public void TC_30_verifyDragAndDrop() {
 		driver.get("https://demoqa.com/droppable");
-		 WebElement dragMeButton=driver.findElement(By.id("draggable"));
-		 WebElement dropMeButton=driver.findElement(By.id("droppable"));
-		 Actions action=new Actions(driver);
-		  action.dragAndDrop(dragMeButton,dropMeButton).build().perform();
+		WebElement dragMeButton = driver.findElement(By.id("draggable"));
+		WebElement dropMeButton = driver.findElement(By.id("droppable"));
+		Actions action = new Actions(driver);
+		action.dragAndDrop(dragMeButton, dropMeButton).build().perform();
 	}
+
 	@Test
-	public void TC_31_verifyDragAndDropOffset()
-	{
+	public void TC_31_verifyDragAndDropOffset() {
 		driver.get("https://demoqa.com/dragabble");
-		WebElement dragMeBox=driver.findElement(By.xpath("//div[@id='dragBox']"));
-		Actions action=new Actions(driver);
-		action.dragAndDropBy(dragMeBox,100,100).build().perform();
-		
+		WebElement dragMeBox = driver.findElement(By.xpath("//div[@id='dragBox']"));
+		Actions action = new Actions(driver);
+		action.dragAndDropBy(dragMeBox, 100, 100).build().perform();
+
 	}
+
 	@Test
-	public void TC_32_verifyDragAndDropAssignment()
-	{
-	driver.get("https://selenium.obsqurazone.com/drag-drop.php");
-	WebElement draggableOne=driver.findElement(By.xpath("//span[text()='Draggable n°1']"));
-	WebElement draggableTwo=driver.findElement(By.xpath("//span[text()='Draggable n°2']"));
-	WebElement draggableThree=driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
-	WebElement draggableFour=driver.findElement(By.xpath("//span[text()='Draggable n°4']"));
-	WebElement droppBox=driver.findElement(By.xpath("//div[@id='mydropzone']"));
-	Actions action=new Actions(driver);
-	action.dragAndDrop(draggableOne, droppBox).build().perform();
-	action.dragAndDrop(draggableTwo, droppBox).build().perform();
-	action.dragAndDrop(draggableThree, droppBox).build().perform();
-	action.dragAndDrop(draggableFour, droppBox).build().perform();
+	public void TC_32_verifyDragAndDropAssignment() {
+		driver.get("https://selenium.obsqurazone.com/drag-drop.php");
+		WebElement draggableOne = driver.findElement(By.xpath("//span[text()='Draggable n°1']"));
+		WebElement draggableTwo = driver.findElement(By.xpath("//span[text()='Draggable n°2']"));
+		WebElement draggableThree = driver.findElement(By.xpath("//span[text()='Draggable n°3']"));
+		WebElement draggableFour = driver.findElement(By.xpath("//span[text()='Draggable n°4']"));
+		WebElement droppBox = driver.findElement(By.xpath("//div[@id='mydropzone']"));
+		Actions action = new Actions(driver);
+		action.dragAndDrop(draggableOne, droppBox).build().perform();
+		action.dragAndDrop(draggableTwo, droppBox).build().perform();
+		action.dragAndDrop(draggableThree, droppBox).build().perform();
+		action.dragAndDrop(draggableFour, droppBox).build().perform();
 	}
+
 	@Test
-	public void TC_33_verifyclickHoldAndResize()
-	{
-		driver.get("https://demoqa.com/resizable");
-		WebElement dragResizeBox=driver.findElement(By.xpath("//div[@id='resizableBoxWithRestriction']/child::span"));
-		Actions action=new Actions(driver);
-		action.clickAndHold(dragResizeBox).build().perform();
-		action.dragAndDropBy(dragResizeBox,75,75).build().perform();
+	public void TC_33_verifyclickHoldAndResize() {
+		// driver.get("https://demoqa.com/resizable");
+		// WebElement
+		// dragResizeBox=driver.findElement(By.xpath("//div[@id='resizableBoxWithRestriction']/child::span"));
+		// Actions action=new Actions(driver);
+		// action.clickAndHold(dragResizeBox).build().perform();
+		// action.dragAndDropBy(dragResizeBox,75,75).build().perform();
+		driver.get("https://jqueryui.com/resizable/");
+		WebElement frame = driver.findElement(By.xpath("//*[@id='content']/iframe"));
+		driver.switchTo().frame(frame);
+		WebElement reSizebox = driver.findElement(By.xpath("//*[@id='resizable']/div[3]"));
+		Actions action = new Actions(driver);
+		action.clickAndHold(reSizebox).build().perform();
+		action.dragAndDropBy(reSizebox, 300, 100).build().perform();
 	}
+
 	@Test
-	public void TC_34_verifyValuesInDropDown()
-	{
+	public void TC_34_verifyValuesInDropDown() {
 		driver.get("https://demo.guru99.com/test/newtours/register.php");
-		WebElement countryDropMenu=driver.findElement(By.xpath("//select[@name='country']"));
-		List<String> expDropDownList=new ArrayList<String>();
+		WebElement countryDropMenu = driver.findElement(By.xpath("//select[@name='country']"));
+		List<String> expDropDownList = new ArrayList<String>();
 		expDropDownList.add("ALBANIA");
 		expDropDownList.add("ALGERIA");
 		expDropDownList.add("AMERICAN SAMOA");
 		expDropDownList.add("ANDORRA");
-		List<String> actDropDownList=new ArrayList<String>();
-		Select select= new Select(countryDropMenu);
-		List<WebElement> dropDownOptions=select.getOptions();
-		for(int i=0;i<4;i++)
-		{
+		List<String> actDropDownList = new ArrayList<String>();
+		Select select = new Select(countryDropMenu);
+		List<WebElement> dropDownOptions = select.getOptions();
+		for (int i = 0; i < 4; i++) {
 			actDropDownList.add(dropDownOptions.get(i).getText());
-			
+
 		}
 		System.out.println(actDropDownList);
-		Assert.assertEquals(actDropDownList, expDropDownList,"Invalid dropDown option");
-		//select.selectByVisibleText("INDIA");
-		 select.selectByIndex(23);
-		//select.selectByValue("ICELAND");
-		
+		Assert.assertEquals(actDropDownList, expDropDownList, "Invalid dropDown option");
+		// select.selectByVisibleText("INDIA");
+		select.selectByIndex(23);
+		// select.selectByValue("ICELAND");
+
+	}
+
+	@Test
+	public void TC_35_verifyMultiSelectDropdown() {
+		driver.get("https://www.softwaretestingmaterial.com/sample-webpage-to-automate/");
+		WebElement multiSelectDropDown = driver.findElement(By.xpath("//select[@name='multipleselect[]']"));
+		Select select = new Select(multiSelectDropDown);
+		boolean status = select.isMultiple();
+		System.out.println(status);
+		select.selectByVisibleText("Performance Testing");
+		select.selectByVisibleText("Manual Testing");
+		List<WebElement> selectedOptions = select.getAllSelectedOptions();
+		for (int i = 0; i < selectedOptions.size(); i++) {
+			System.out.println(selectedOptions.get(i).getText());
+		}
+		select.deselectAll();
+
+	}
+
+	@Test
+	public void TC_36_verifyfindElementsCommand() {
+		driver.get("https://selenium.obsqurazone.com/radio-button-demo.php");
+		List<WebElement> genders = driver.findElements(By.xpath("//input[@name='student-gender']"));
+		System.out.println(genders);
+		for (int i = 0; i < genders.size(); i++)// Multiple checkBox Handling
+		{
+			String gender = genders.get(i).getAttribute("value");
+			System.out.println(gender);
+			if (gender.equals("Female")) {
+				genders.get(i).click();
+			}
+
+		}
 	}
 	
+	@Test
+	public void TC_37_verifyFileUploadInSelenium()
+	{
+		driver.get("https://demo.guru99.com/test/upload/");
+		WebElement chooseFileUpload=driver.findElement(By.xpath("//input[@id='uploadfile_0']"));
+		chooseFileUpload.sendKeys("C:\\Users\\junoj\\OneDrive\\Desktop\\Selenium\\Data\\test.txt");
+		WebElement termsAccept=driver.findElement(By.xpath("//input[@id='terms']"));
+		termsAccept.click();
+		WebElement submitButton=driver.findElement(By.xpath("//button[@id='submitbutton']"));
+		submitButton.click();
+		
+	}
+
 }
