@@ -8,6 +8,7 @@ import java.util.Set;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,7 +29,7 @@ public class SeleniumCommands {
 
 	public void testInitialise(String browser) {
 		if (browser.equals("chrome")) {
-			ChromeOptions ops=new ChromeOptions();
+			ChromeOptions ops = new ChromeOptions();
 			ops.addArguments("--remote-allow-origins=*");
 			driver = new ChromeDriver(ops);
 		} else if (browser.equals("firefox")) {
@@ -520,7 +521,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_23_verifySimpleAlert() {
+	public void TC_023_verifySimpleAlert() {
 		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
 		WebElement clickButton = driver.findElement(By.xpath("//button[@ class='btn btn-success']"));
 		clickButton.click();
@@ -542,7 +543,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_25_verifyPromptAlert() {
+	public void TC_025_verifyPromptAlert() {
 		driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
 		WebElement promptButton = driver.findElement(By.xpath("//button[@class='btn btn-danger']"));
 		promptButton.click();
@@ -554,7 +555,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_26_verifyTextInAFrame() {
+	public void TC_026_verifyTextInAFrame() {
 		driver.get("https://demoqa.com/frames");
 		List<WebElement> frames = driver.findElements(By.tagName("iframe"));
 		int noOfFrames = frames.size();
@@ -571,7 +572,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_27_verifyRightClick() {
+	public void TC_027_verifyRightClick() {
 		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
 		WebElement rightClickButton = driver.findElement(By.xpath("//span[@class='context-menu-one btn btn-neutral']"));
 		Actions action = new Actions(driver);
@@ -580,7 +581,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_28_verifyDoubleClick() {
+	public void TC_028_verifyDoubleClick() {
 		driver.get("https://demo.guru99.com/test/simple_context_menu.html");
 		WebElement doubleClickButton = driver.findElement(By.xpath("//button[text()='Double-Click Me To See Alert']"));
 		Actions action = new Actions(driver);
@@ -590,7 +591,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_29_verifyMouseOver() {
+	public void TC_029_verifyMouseOver() {
 		driver.get("https://demoqa.com/menu/");
 		WebElement mainItemOne = driver.findElement(By.xpath("//a[text()='Main Item 1']"));
 		Actions action = new Actions(driver);
@@ -601,7 +602,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_30_verifyDragAndDrop() {
+	public void TC_030_verifyDragAndDrop() {
 		driver.get("https://demoqa.com/droppable");
 		WebElement dragMeButton = driver.findElement(By.id("draggable"));
 		WebElement dropMeButton = driver.findElement(By.id("droppable"));
@@ -610,7 +611,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_31_verifyDragAndDropOffset() {
+	public void TC_031_verifyDragAndDropOffset() {
 		driver.get("https://demoqa.com/dragabble");
 		WebElement dragMeBox = driver.findElement(By.xpath("//div[@id='dragBox']"));
 		Actions action = new Actions(driver);
@@ -619,7 +620,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_32_verifyDragAndDropAssignment() {
+	public void TC_032_verifyDragAndDropAssignment() {
 		driver.get("https://selenium.obsqurazone.com/drag-drop.php");
 		WebElement draggableOne = driver.findElement(By.xpath("//span[text()='Draggable n°1']"));
 		WebElement draggableTwo = driver.findElement(By.xpath("//span[text()='Draggable n°2']"));
@@ -634,7 +635,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_33_verifyclickHoldAndResize() {
+	public void TC_033_verifyclickHoldAndResize() {
 		// driver.get("https://demoqa.com/resizable");
 		// WebElement
 		// dragResizeBox=driver.findElement(By.xpath("//div[@id='resizableBoxWithRestriction']/child::span"));
@@ -651,7 +652,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_34_verifyValuesInDropDown() {
+	public void TC_034_verifyValuesInDropDown() {
 		driver.get("https://demo.guru99.com/test/newtours/register.php");
 		WebElement countryDropMenu = driver.findElement(By.xpath("//select[@name='country']"));
 		List<String> expDropDownList = new ArrayList<String>();
@@ -675,7 +676,7 @@ public class SeleniumCommands {
 	}
 
 	@Test
-	public void TC_35_verifyMultiSelectDropdown() {
+	public void TC_035_verifyMultiSelectDropdown() {
 		driver.get("https://www.softwaretestingmaterial.com/sample-webpage-to-automate/");
 		WebElement multiSelectDropDown = driver.findElement(By.xpath("//select[@name='multipleselect[]']"));
 		Select select = new Select(multiSelectDropDown);
@@ -688,11 +689,10 @@ public class SeleniumCommands {
 			System.out.println(selectedOptions.get(i).getText());
 		}
 		select.deselectAll();
-
 	}
 
 	@Test
-	public void TC_36_verifyfindElementsCommand() {
+	public void TC_036_verifyFindElementsCommand() {
 		driver.get("https://selenium.obsqurazone.com/radio-button-demo.php");
 		List<WebElement> genders = driver.findElements(By.xpath("//input[@name='student-gender']"));
 		System.out.println(genders);
@@ -706,18 +706,58 @@ public class SeleniumCommands {
 
 		}
 	}
+
+	@Test
+	public void TC_037_verifyFileUploadInSelenium() {
+		driver.get("https://demo.guru99.com/test/upload/");
+		WebElement chooseFileUpload = driver.findElement(By.xpath("//input[@id='uploadfile_0']"));
+		chooseFileUpload.sendKeys(" ");
+		WebElement termsAccept = driver.findElement(By.xpath("//input[@id='terms']"));
+		termsAccept.click();
+		WebElement submitButton = driver.findElement(By.xpath("//button[@id='submitbutton']"));
+		submitButton.click();
+
+	}
 	
 	@Test
-	public void TC_37_verifyFileUploadInSelenium()
+	public void TC_038_verifyClickAndSenKeysUsingJavaScriptExecutor()
 	{
-		driver.get("https://demo.guru99.com/test/upload/");
-		WebElement chooseFileUpload=driver.findElement(By.xpath("//input[@id='uploadfile_0']"));
-		chooseFileUpload.sendKeys("C:\\Users\\junoj\\OneDrive\\Desktop\\Selenium\\Data\\test.txt");
-		WebElement termsAccept=driver.findElement(By.xpath("//input[@id='terms']"));
-		termsAccept.click();
-		WebElement submitButton=driver.findElement(By.xpath("//button[@id='submitbutton']"));
-		submitButton.click();
-		
+		driver.get("https://demowebshop.tricentis.com/");
+		JavascriptExecutor js=(JavascriptExecutor) driver;
+		js.executeScript("document.getElementById('newsletter-email').value='abc@gmail.com'");
+		js.executeScript("document.getElementById('newsletter-subscribe-button').click()");
 	}
-
+	
+@Test
+public void TC_039_verifyScrollDownOfAWebPage()
+{
+		driver.get("https://demo.guru99.com/test/guru99home/");
+		JavascriptExecutor js=(JavascriptExecutor) driver;
+		js.executeScript("window.scrollBy(0,1000)");
+}
+@Test
+public void TC_040_verifyScrollIntoAViewOfWebElement()
+{
+	driver.get("https://demo.guru99.com/test/guru99home/");
+	WebElement linuxText=driver.findElement(By.linkText("Linux"));
+	JavascriptExecutor js=(JavascriptExecutor) driver;
+	js.executeScript("arguments[0].scrollIntoView();",linuxText);
+	
+}
+@Test
+public void TC_041_verifyTheBottomOfThePage()
+{
+	driver.get("https://demo.guru99.com/test/guru99home/");
+	JavascriptExecutor js=(JavascriptExecutor) driver;
+	js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+	
+}
+@Test
+public void TC_042_verifyHorizontalScroll()
+{
+	driver.get("http://demo.guru99.com/test/guru99home/scrolling.html");
+	WebElement vbScript=driver.findElement(By.linkText("VBScript"));
+	JavascriptExecutor js=(JavascriptExecutor) driver;
+	js.executeScript("arguments[0].scrollIntoView();",vbScript);
+}
 }
