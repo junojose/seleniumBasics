@@ -3,6 +3,7 @@ package SeleniumBasicCommands;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -24,6 +25,7 @@ import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Table.Cell;
@@ -171,5 +173,40 @@ public class DemoWebShoap {
 		Assert.assertEquals(actualMail, ExcelUtility.readStringData(excelPath, sheetName, 1, 4), "Invalid Mail found");
 
 	}
+	@Test
+	public void TC_006_verifyDemoWebShopTitleFromExcelSheetUsingList() throws IOException
+	{
+		driver.get("https://demowebshop.tricentis.com/");
+		String actTitle=driver.getTitle();
+		System.out.println("Actual" +actTitle);
+		List<ArrayList<String>> data=ExcelUtility.excelDataReader("\\src\\test\\resources\\TestData.xlsx","HomePage");
+		String expTitle=data.get(1).get(0);
+		System.out.println("Expected" +expTitle);
+		Assert.assertEquals(actTitle, expTitle,"Invalid Title Found");
+	}
+	@Test
+	public void TC_007_verifyLoginWithInvalidDatas() {      /*dataprovider*/
+		driver.get("https://demowebshop.tricentis.com/");
+		WebElement loginLink=driver.findElement(By.xpath("//a[text()='Log in']"));
+		loginLink.click();
+		WebElement emailField = driver.findElement(By.xpath("//input[@id='Email']"));
+		WebElement passwordField = driver.findElement(By.xpath("//input[@id='Password']"));
+		emailField.sendKeys("kitten@yopmail.com");
+		passwordField.sendKeys("kitten@123");
+		WebElement loginButton=driver.findElement(By.xpath("//input[@class='button-1 login-button']"));
+		loginButton.click();
+		WebElement errorMessage=driver.findElement(By.xpath("//div[@class='validation-summary-errors']//span"));
+		String actText=errorMessage.getText();
+		String expText="Login was unsuccessful. Please correct the errors and try again.";
+		Assert.assertEquals(actText, expText,"Invalid Text Found");
+	}
+	@DataProvider(name = "InvalidCredentials")
+	public Object[][] userCredentials()
+	{
+		Object[][] data= {{"test123@test.com","123456"},{"test@yop.com","12345"},{"test123@test.com","123456"}};
+		return data;
+		}
+	}
+	
 
-}
+
