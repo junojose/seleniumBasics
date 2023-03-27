@@ -143,17 +143,17 @@ public class DemoWebShoap {
 	}
 
 	@Test
-	public void TC_005_verifyRegistrationFromExcelSheet() throws IOException
-	{
+	public void TC_005_verifyRegistrationFromExcelSheet() throws IOException {
 		driver.get("https://demowebshop.tricentis.com/");
 		WebElement registerLink = driver.findElement(By.xpath("//a[@class='ico-register']"));
 		registerLink.click();
 		String actualTitle = driver.getTitle();
 		String excelPath = "\\src\\test\\resources\\TestData.xlsx";
 		String sheetName = "RegisterPage";
-		String expectedTitle=ExcelUtility.readStringData(excelPath, sheetName, 1, 0);
-		Assert.assertEquals(actualTitle, expectedTitle,"Invalid Registration Title Found");
-		//Assert.assertEquals(actualTitle, ExcelUtility.readStringData(excelPath, sheetName, 1, 0),"Invalid Registration Title Found");
+		String expectedTitle = ExcelUtility.readStringData(excelPath, sheetName, 1, 0);
+		Assert.assertEquals(actualTitle, expectedTitle, "Invalid Registration Title Found");
+		// Assert.assertEquals(actualTitle, ExcelUtility.readStringData(excelPath,
+		// sheetName, 1, 0),"Invalid Registration Title Found");
 		List<WebElement> gender = driver.findElements(By.xpath("//input[@name='Gender']"));
 		selectGender(ExcelUtility.readStringData(excelPath, sheetName, 1, 1), gender);
 		WebElement firstName = driver.findElement(By.xpath("//input[@id='FirstName']"));
@@ -173,40 +173,89 @@ public class DemoWebShoap {
 		Assert.assertEquals(actualMail, ExcelUtility.readStringData(excelPath, sheetName, 1, 4), "Invalid Mail found");
 
 	}
+
 	@Test
-	public void TC_006_verifyDemoWebShopTitleFromExcelSheetUsingList() throws IOException
-	{
+	public void TC_006_verifyDemoWebShopTitleFromExcelSheetUsingList() throws IOException {
 		driver.get("https://demowebshop.tricentis.com/");
-		String actTitle=driver.getTitle();
-		System.out.println("Actual" +actTitle);
-		List<ArrayList<String>> data=ExcelUtility.excelDataReader("\\src\\test\\resources\\TestData.xlsx","HomePage");
-		String expTitle=data.get(1).get(0);
-		System.out.println("Expected" +expTitle);
-		Assert.assertEquals(actTitle, expTitle,"Invalid Title Found");
+		String actTitle = driver.getTitle();
+		System.out.println("Actual" + actTitle);
+		List<ArrayList<String>> data = ExcelUtility.excelDataReader("\\src\\test\\resources\\TestData.xlsx",
+				"HomePage");
+		String expTitle = data.get(1).get(0);
+		System.out.println("Expected" + expTitle);
+		Assert.assertEquals(actTitle, expTitle, "Invalid Title Found");
 	}
-	@Test
-	public void TC_007_verifyLoginWithInvalidDatas() {      /*dataprovider*/
+
+	@Test(dataProvider = "InvalidCredentials")
+	public void TC_007_verifyLoginWithInvalidDatas(String uname, String password) { /* dataprovider */
 		driver.get("https://demowebshop.tricentis.com/");
-		WebElement loginLink=driver.findElement(By.xpath("//a[text()='Log in']"));
+		WebElement loginLink = driver.findElement(By.xpath("//a[text()='Log in']"));
 		loginLink.click();
 		WebElement emailField = driver.findElement(By.xpath("//input[@id='Email']"));
 		WebElement passwordField = driver.findElement(By.xpath("//input[@id='Password']"));
-		emailField.sendKeys("kitten@yopmail.com");
-		passwordField.sendKeys("kitten@123");
-		WebElement loginButton=driver.findElement(By.xpath("//input[@class='button-1 login-button']"));
+		emailField.sendKeys(uname);
+		passwordField.sendKeys(password);
+		WebElement loginButton = driver.findElement(By.xpath("//input[@class='button-1 login-button']"));
 		loginButton.click();
-		WebElement errorMessage=driver.findElement(By.xpath("//div[@class='validation-summary-errors']//span"));
-		String actText=errorMessage.getText();
-		String expText="Login was unsuccessful. Please correct the errors and try again.";
-		Assert.assertEquals(actText, expText,"Invalid Text Found");
+		WebElement errorMessage = driver.findElement(By.xpath("//div[@class='validation-summary-errors']//span"));
+		String actText = errorMessage.getText();
+		String expText = "Login was unsuccessful. Please correct the errors and try again.";
+		Assert.assertEquals(actText, expText, "Invalid Text Found");
 	}
+
 	@DataProvider(name = "InvalidCredentials")
-	public Object[][] userCredentials()
-	{
-		Object[][] data= {{"test123@test.com","123456"},{"test@yop.com","12345"},{"test123@test.com","123456"}};
+	public Object[][] userCredentials() {
+		Object[][] data = { { "test123@test.com", "123456" }, { "test@yop.com", "12345" },
+				{ "test123@test.com", "123456" } };
 		return data;
-		}
 	}
-	
+	@Test
+	public void TC_008_verifyRegistrationUsingRandomGenerator() throws InterruptedException {
+		driver.get("https://demowebshop.tricentis.com/");
+		WebElement registerLink = driver.findElement(By.xpath("//a[@class='ico-register']"));
+		registerLink.click();
+		String firstName=RandomUtility.getfName();
+		String lastName=RandomUtility.getlName();
+		String emailId=RandomUtility.getRandomEmail();
+		String password=firstName+"@123";
+		List<WebElement> gender = driver.findElements(By.xpath("//input[@name='Gender']"));
+		selectGender("F", gender);
+		WebElement fName = driver.findElement(By.xpath("//input[@id='FirstName']"));
+		WebElement lName = driver.findElement(By.xpath("//input[@id='LastName']"));
+		WebElement email = driver.findElement(By.xpath("//input[@id='Email']"));
+		WebElement pword = driver.findElement(By.xpath("//input[@id='Password']"));
+		WebElement confirmpword = driver.findElement(By.xpath("//input[@id='ConfirmPassword']"));
+		WebElement registerButton = driver.findElement(By.xpath("//input[@id='register-button']"));
+		fName.sendKeys(firstName);
+		lName.sendKeys(lastName);
+		email.sendKeys(emailId);
+		pword.sendKeys(password);
+		confirmpword.sendKeys(password);
+		registerButton.click();
+		Thread.sleep(2000);
+		WebElement validationMail = driver.findElement(By.xpath("//div[@class='header-links']//a[@class='account']"));
+		String actualMail = validationMail.getText();
+		Assert.assertEquals(actualMail,emailId, "Invalid Mail found");
 
-
+		}
+	@Test(dataProvider="ValidCredentials")
+	public void TC_009_verifyLoginUsingDataProvider(String uname,String password)
+	{
+		driver.get("https://demowebshop.tricentis.com/");
+		WebElement loginLink = driver.findElement(By.xpath("//a[text()='Log in']"));
+		loginLink.click();
+		WebElement emailField = driver.findElement(By.xpath("//input[@id='Email']"));
+		WebElement passwordField = driver.findElement(By.xpath("//input[@id='Password']"));
+		emailField.sendKeys(uname);
+		passwordField.sendKeys(password);
+		WebElement loginButton = driver.findElement(By.xpath("//input[@class='button-1 login-button']"));
+		loginButton.click();
+	}
+	@DataProvider(name="ValidCredentials")
+	public Object[][] loginCredentials()
+	{
+		Object[][] data= {{"jun123@gmail.com","test@123"},{"kitjose00@gmail.com","kit@123"}};
+		return data;
+		
+	}
+}
