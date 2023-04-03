@@ -37,6 +37,7 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 public class SeleniumCommands {
 	private static final String WebElement = null;
@@ -875,5 +876,22 @@ public class SeleniumCommands {
 	fwait.pollingEvery(Duration.ofSeconds(1));
 	fwait.until(ExpectedConditions.visibilityOf(subscribeButton));
 	subscribeButton.click();
+	}
+	@Test
+	public void TC_048_verifySoftAssert() {
+		driver.get("https://selenium.obsqurazone.com/simple-form-demo.php");
+		SoftAssert softAssert=new SoftAssert();
+		WebElement valueA = driver.findElement(By.id("value-a"));
+		WebElement valueB = driver.findElement(By.id("value-b"));
+		WebElement getTotalButton = driver.findElement(By.id("button-two"));
+		WebElement totalMessage = driver.findElement(By.id("message-two"));
+		valueA.sendKeys("100");
+		valueB.sendKeys("200");
+		getTotalButton.click();
+		String actualTotal = totalMessage.getText();
+		String expectedTotal = "Total A + B : 301";
+		softAssert.assertEquals(actualTotal, expectedTotal, "Invalid Total Message Found");
+		System.out.println(actualTotal);
+
 	}
 }
